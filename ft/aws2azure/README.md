@@ -181,6 +181,7 @@ Following example pulls file from the other ec2 instance, make sure that prior t
     time scp -P 6192 -i ~/.ssh/id_rsa /root/1024MB.img zameer@localhost:/tmp
 
 ## The Follow up Report
+The EC official benchmark test for File Transfer use cases.
 
 ### Spec
 
