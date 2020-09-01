@@ -3,11 +3,11 @@
 
 # Table of Contents
 
-- [Testing Method](#org5c00d15)
-- [Consolidated Results](#org8ca3b16)
-- [Observations](#orgbb4a92e)
-- [Action Items](#org6dee146)
-- [Reference](#orgd238f97)
+- [Testing Method](#testing-method)
+- [Consolidated Results](#consolidated-results)
+- [Observations](#observations)
+- [Action Items](#action-items)
+- [Reference](#reference)
 
 ## Testing Method
 
@@ -149,18 +149,9 @@
 </tbody>
 </table>
 
-
-<a id="orgbb4a92e"></a>
-
 ## Observations
 
-
-<a id="org6dee146"></a>
-
 ## Action Items
-
-
-<a id="orgd238f97"></a>
 
 ## Reference
 
