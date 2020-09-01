@@ -1,17 +1,25 @@
 
-# AWS to Azure - File Transfer using EC(Enterprise Connect)
+# AWS to Azure - File Transfer using EC (Enterprise Connect)
 
 # Table of Contents
 
-- [Testing Method](#testing-method)
-- [Consolidated Results](#consolidated-results)
-- [Observations](#observations)
-- [Action Items](#action-items)
+- [The Original Report](#the-original-report)
+  -[Testing Method](#testing-method)
+  - [Consolidated Results](#consolidated-results)
+  - [Observations](#observations)
+  - [Action Items](#action-items)
+- [The Follow up Report](#the-follow-up-report)
+  - [Spec](#spec)
+  - [Test script](#test-script)
+  - [Benchmark result](#benchmark-resukt)
 - [Reference](#reference)
 
-## Testing Method
+## The Origin Report
+see reference[1]
 
-## Consolidated Results
+### Testing Method
+
+### Consolidated Results
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -149,9 +157,9 @@
 </tbody>
 </table>
 
-## Observations
+### Observations
 
-## Action Items
+### Action Items
 
 AWS : t2.large
 Azure : Standard D2s v3 (2 vcpus, 8 GiB memory)
@@ -172,6 +180,13 @@ Following example pulls file from the other ec2 instance, make sure that prior t
     time scp -P 6192 -i ~/.ssh/id_rsa /root/100MB.img zameer@localhost:/tmp
     time scp -P 6192 -i ~/.ssh/id_rsa /root/1024MB.img zameer@localhost:/tmp
 
+## The Follow up Report
+
+### Spec
+
+### Test script
+
+### Benchmark result
 
 ## Reference
-[AWS to Azure - File Transfer using EC (Internal)](https://github.build.ge.com/200020008/digitalconnect-Cloud-Automation/blob/master/cloud-ge-latency/GE%20Cloud%20Consolidated%20Latency%20Report.md) by Zameer Ahmed
+<sup>[1][AWS to Azure - File Transfer using EC (Internal)](https://github.build.ge.com/200020008/digitalconnect-Cloud-Automation/blob/master/cloud-ge-latency/GE%20Cloud%20Consolidated%20Latency%20Report.md) Originated by Zameer Ahmed</sup>
