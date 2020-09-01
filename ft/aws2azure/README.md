@@ -153,8 +153,6 @@
 
 ## Action Items
 
-## Reference
-
 AWS : t2.large
 Azure : Standard D2s v3 (2 vcpus, 8 GiB memory)
 
