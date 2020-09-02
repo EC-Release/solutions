@@ -4,14 +4,14 @@
 # Table of Contents
 
 - [The Original Report](#the-original-report)
-  -[Testing Method](#testing-method)
+  - [Testing Method](#testing-method)
   - [Consolidated Results](#consolidated-results)
   - [Observations](#observations)
   - [Action Items](#action-items)
 - [The Follow up Report](#the-follow-up-report)
   - [Spec](#spec)
   - [Test script](#test-script)
-  - [Benchmark result](#benchmark-resukt)
+  - [Benchmark result](#benchmark-result)
 - [Reference](#reference)
 
 ## The Origin Report
