@@ -17,9 +17,7 @@
 ## The Origin Report
 see [reference[1]](#reference)
 
-### Testing Method
-
-### Consolidated Results
+#### Consolidated Results
 
 | File Size | Time Taken #1 | Time Taken #2 | Time Taken #3 | Time Taken #4 | Time Taken #5 |
 |-----|------|------|------|------|-----|
@@ -37,15 +35,17 @@ Consolidated Results
 | 100 MB | 6.18 | |
 | 1024 MB | 57.14 | |
 
+#### Spec
 
-### Observations
+AWS: t2.large
 
-### Action Items
+Azure: Standard D2s v3 (2 vcpus, 8 GiB memory)
 
-AWS : t2.large
-Azure : Standard D2s v3 (2 vcpus, 8 GiB memory)
+EC Agent: v1.1beta.fukuoka.2730
 
-Setup
+EC Connection Type: Fuse mode (gw:server in AWS and client in Azure)
+
+#### Setup
 
 ```
 dd if=/dev/urandom of=/root/1MB.img bs=1M count=1
@@ -53,7 +53,7 @@ dd if=/dev/urandom of=/root/10MB.img bs=1M count=10
 dd if=/dev/urandom of=/root/100MB.img bs=1M count=100
 dd if=/dev/urandom of=/root/1024MB.img bs=1M count=1024
 ```
-Commands for file copy
+#### Commands for file copy
 
 Following example pulls file from the other ec2 instance, make sure that prior to running below, generate the image creation fresh to discount file-cache effect.
 ```
@@ -64,14 +64,22 @@ time scp -P 6192 -i ~/.ssh/id_rsa /root/1024MB.img zameer@localhost:/tmp
 ```
     
 
-## The Follow up Report
+### The Follow up Report
 The EC official benchmark test for File Transfer use cases.
 
-### Spec
+#### Spec
+AWS: t2.large
 
-### Test script
+Azure: Standard D2s v3 (2 vcpus, 8 GiB memory)
 
-### Benchmark result
+EC Agent: v1.1beta.fukuoka.2730
+
+EC Connection Type: Fuse mode (gw:server in AWS and client in Azure)
+
+
+#### Test script
+
+#### Benchmark result
 
 ## Reference
 <sup>[1][AWS to Azure - File Transfer using EC (Internal)](https://github.build.ge.com/200020008/digitalconnect-Cloud-Automation/blob/master/cloud-ge-latency/GE%20Cloud%20Consolidated%20Latency%20Report.md) Originated by Zameer Ahmed</sup>
