@@ -1,2 +1,5 @@
 language: minimal
 if: head_branch =~ ^ft_automation$ OR branch = ft_automation
+
+script:
+- echo hello
