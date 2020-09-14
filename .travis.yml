@@ -1,2 +1,10 @@
 language: minimal
 if: head_branch =~ ^ft_automation$ OR branch = ft_automation
+
+services:
+    - docker
+
+before_install:
+
+script:
+    # - SSH into AWS VM
