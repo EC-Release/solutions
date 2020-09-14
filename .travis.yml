@@ -7,4 +7,4 @@ services:
 before_install:
 
 script:
-    # - SSH into AWS VM
+- echo hello
