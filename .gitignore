@@ -2,3 +2,4 @@
 *.backup
 *.tfvars
 ft/aws2azure/.terraform/
+ft/aws2azure/.idea/
