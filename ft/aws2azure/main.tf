@@ -20,12 +20,32 @@ resource "aws_instance" "aws-dc-sandbox-vpc-vm1" {
             #! /bin/bash
             sudo su -
             yum update -y >> ~/logs.txt
-            yum install httpd -y >> ~/logs.txt
-            service httpd start >> ~/logs.txt
-            chkconfig httpd on >> ~/logs.txt
-            cd /var/www/html >> ~/logs.txt
+
+            mkdir -p ~/gwserver
+            cd ~/gwserver
+            wget https://github.com/Enterprise-connect/sdk/blob/v1/dist/ecagent_linux_sys.tar.gz?raw=true -O ecagent_linux_sys.tar.gz
+            tar -xvzf ./ecagent_linux_sys.tar.gz
+            rm ecagent_linux_sys.tar.gz -f
+
             echo "<html><h1>test webpage</h1></html>" > index.html
-            ${var.aws-dc-sandbox-vpc-vm.scp_command}
+
+             echo "./ecagent_linux_sys -mod ${var.aws-dc-sandbox-vpc-vm.gwserver_mod} \
+              -aid ${var.aws-dc-sandbox-vpc-vm.gwserver_aid} \
+              -grp ${var.aws-dc-sandbox-vpc-vm.gwserver_grp} \
+              -cid ${var.aws-dc-sandbox-vpc-vm.gwserver_cid} \
+              -csc ${var.aws-dc-sandbox-vpc-vm.gwserver_csc} \
+              -dur ${var.aws-dc-sandbox-vpc-vm.gwserver_dur} \
+              -oa2 ${var.aws-dc-sandbox-vpc-vm.gwserver_oa2} \
+              -hst ${var.aws-dc-sandbox-vpc-vm.gwserver_hst} \
+              -zon ${var.aws-dc-sandbox-vpc-vm.gwserver_zon} \
+              -sst ${var.aws-dc-sandbox-vpc-vm.gwserver_sst}  \
+              -rpt ${var.aws-dc-sandbox-vpc-vm.gwserver_rpt} \
+              -rht ${var.aws-dc-sandbox-vpc-vm.gwserver_rht}
+              -dbg &" >> ./server.sh
+
+            chmod 755 ./server.sh
+            nohup ./server.sh &
+
    EOF
 
   root_block_device {

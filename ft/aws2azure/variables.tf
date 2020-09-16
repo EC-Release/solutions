@@ -17,6 +17,22 @@ variable "aws-dc-sandbox-vpc-vm" {
     associate_public_ip_address = bool
     scp_command                 = string
     tags                        = map(string)
+
+    gwserver_mod                = string
+    gwserver_zon                = string
+    gwserver_sst                = string
+    # Following properties needed only when agent running in gw:server mode. It will be enabled once public vm created in azure
+    # gwserver_tkn                = string
+    # gwserver_gpt                = number
+    gwserver_hst                = string
+    gwserver_aid                = string
+    gwserver_grp                = string
+    gwserver_cid                = string
+    gwserver_csc                = string
+    gwserver_dur                = number
+    gwserver_oa2                = string
+    gwserver_rht                = string
+    gwserver_rpt                = number
   })
 }
 
