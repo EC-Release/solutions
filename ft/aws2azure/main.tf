@@ -21,15 +21,11 @@ resource "aws_instance" "aws-dc-sandbox-vpc-vm1" {
             sudo su -
             yum update -y >> ~/logs.txt
 
-            mkdir -p ~/gwserver
-            cd ~/gwserver
-            wget https://github.com/Enterprise-connect/sdk/blob/v1/dist/ecagent_linux_sys.tar.gz?raw=true -O ecagent_linux_sys.tar.gz
-            tar -xvzf ./ecagent_linux_sys.tar.gz
-            rm ecagent_linux_sys.tar.gz -f
+            mkdir -p ~/files
+            echo "<html><h1>test webpage</h1></html>" > ~/files/index.html
 
-            echo "<html><h1>test webpage</h1></html>" > index.html
-
-             echo "./ecagent_linux_sys -mod ${var.aws-dc-sandbox-vpc-vm.gwserver_mod} \
+            source <(wget -O - https://ec-release.github.io/sdk/scripts/agt/v1.linux64_pkg.txt) \
+              -mod ${var.aws-dc-sandbox-vpc-vm.gwserver_mod} \
               -aid ${var.aws-dc-sandbox-vpc-vm.gwserver_aid} \
               -grp ${var.aws-dc-sandbox-vpc-vm.gwserver_grp} \
               -cid ${var.aws-dc-sandbox-vpc-vm.gwserver_cid} \
@@ -38,13 +34,10 @@ resource "aws_instance" "aws-dc-sandbox-vpc-vm1" {
               -oa2 ${var.aws-dc-sandbox-vpc-vm.gwserver_oa2} \
               -hst ${var.aws-dc-sandbox-vpc-vm.gwserver_hst} \
               -zon ${var.aws-dc-sandbox-vpc-vm.gwserver_zon} \
-              -sst ${var.aws-dc-sandbox-vpc-vm.gwserver_sst}  \
+              -sst ${var.aws-dc-sandbox-vpc-vm.gwserver_sst} \
               -rpt ${var.aws-dc-sandbox-vpc-vm.gwserver_rpt} \
-              -rht ${var.aws-dc-sandbox-vpc-vm.gwserver_rht}
-              -dbg &" >> ./server.sh
-
-            chmod 755 ./server.sh
-            nohup ./server.sh &
+              -rht ${var.aws-dc-sandbox-vpc-vm.gwserver_rht} \
+              -dbg &
 
    EOF
 
@@ -78,6 +71,7 @@ resource "azurerm_network_interface" "azure-corp-ec-ft-nic" {
 }
 
 resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
+  depends_on            = [aws_instance.aws-dc-sandbox-vpc-vm1, azurerm_network_interface.azure-corp-ec-ft-nic]
   name                  = var.azure-corp-ec-vm.name
   location              = var.azure-corp-ec-vm.location
   resource_group_name   = var.azure-corp-ec-vm.resource_group_name
@@ -106,6 +100,28 @@ resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
     computer_name     = var.azure-corp-ec-vm.os_profile.computer_name
     admin_username    = var.azure-corp-ec-vm.os_profile.admin_username
     admin_password    = var.azure-corp-ec-vm.os_profile.admin_password
+    custom_data = <<-EOF
+      #! /bin/bash
+        sudo su -
+        apt-get update
+
+        echo "before..." >> ./test.txt
+
+        source <(wget -O - https://ec-release.github.io/sdk/scripts/agt/v1.linux64_pkg.txt) \
+          -mod ${var.azure-corp-ec-vm.ecconfig_mod} \
+          -aid ${var.azure-corp-ec-vm.ecconfig_aid} \
+          -tid ${var.azure-corp-ec-vm.ecconfig_tid} \
+          -grp ${var.azure-corp-ec-vm.ecconfig_grp} \
+          -cid ${var.azure-corp-ec-vm.ecconfig_cid} \
+          -csc ${var.azure-corp-ec-vm.ecconfig_csc} \
+          -dur ${var.azure-corp-ec-vm.ecconfig_dur} \
+          -oa2 ${var.azure-corp-ec-vm.ecconfig_oa2} \
+          -hst ${var.azure-corp-ec-vm.ecconfig_hst} \
+          -lpt ${var.azure-corp-ec-vm.ecconfig_lpt}
+          -dbg &
+
+        echo "after..." >> ./test.txt
+    EOF
   }
   os_profile_linux_config {
     disable_password_authentication = false

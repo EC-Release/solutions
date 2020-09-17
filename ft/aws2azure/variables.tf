@@ -33,6 +33,7 @@ variable "aws-dc-sandbox-vpc-vm" {
     gwserver_oa2                = string
     gwserver_rht                = string
     gwserver_rpt                = number
+    gwserver_dbg                = bool
   })
 }
 
@@ -54,6 +55,17 @@ variable "azure-corp-ec-vm" {
     vm_size                           = string
     delete_os_disk_on_termination     = bool
     delete_data_disks_on_termination  = bool
+
+    ecconfig_mod                      = string
+    ecconfig_aid                      = string
+    ecconfig_tid                      = string
+    ecconfig_grp                      = string
+    ecconfig_cid                      = string
+    ecconfig_csc                      = string
+    ecconfig_dur                      = number
+    ecconfig_oa2                      = string
+    ecconfig_hst                      = string
+    ecconfig_lpt                      = number
 
     storage_image_reference           = map(string)
     storage_os_disk                   = map(string)
