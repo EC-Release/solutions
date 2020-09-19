@@ -19,10 +19,19 @@ resource "aws_instance" "aws-dc-sandbox-vpc-vm1" {
   user_data                   = <<-EOF
             #! /bin/bash
             sudo su -
-            yum update -y >> ~/logs.txt
+            yum update -y >> ~/sudo-logs.txt
 
-            mkdir -p ~/files
-            echo "<html><h1>test webpage</h1></html>" > ~/files/index.html
+            sudo useradd -c ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-name} -m ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-name}
+            echo ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} | sudo passwd --stdin ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-name}
+            sudo sed 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config > temp.txt
+            mv -f temp.txt /etc/ssh/sshd_config
+            sudo service sshd restart
+
+            su - ec-sftp-user
+            mkdir -p /home/ec-sftp-user/files
+            echo "<html><h1>test webpage</h1></html>" > /home/ec-sftp-user/files/index.html
+
+            cat /home/ec-sftp-user/files/index.html >> /home/ec-sftp-user/ec-sftp-user-logs.txt
 
             source <(wget -O - https://ec-release.github.io/sdk/scripts/agt/v1.linux64_pkg.txt) \
               -mod ${var.aws-dc-sandbox-vpc-vm.gwserver_mod} \
@@ -102,25 +111,46 @@ resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
     admin_password    = var.azure-corp-ec-vm.os_profile.admin_password
     custom_data = <<-EOF
       #! /bin/bash
-        sudo su -
-        apt-get update
+      sudo su -
 
-        echo "before..." >> ./test.txt
+      apt-get update >> /root/logs.txt
+      apt-get install sshpass >> /root/logs.txt
 
-        source <(wget -O - https://ec-release.github.io/sdk/scripts/agt/v1.linux64_pkg.txt) \
-          -mod ${var.azure-corp-ec-vm.ecconfig_mod} \
-          -aid ${var.azure-corp-ec-vm.ecconfig_aid} \
-          -tid ${var.azure-corp-ec-vm.ecconfig_tid} \
-          -grp ${var.azure-corp-ec-vm.ecconfig_grp} \
-          -cid ${var.azure-corp-ec-vm.ecconfig_cid} \
-          -csc ${var.azure-corp-ec-vm.ecconfig_csc} \
-          -dur ${var.azure-corp-ec-vm.ecconfig_dur} \
-          -oa2 ${var.azure-corp-ec-vm.ecconfig_oa2} \
-          -hst ${var.azure-corp-ec-vm.ecconfig_hst} \
-          -lpt ${var.azure-corp-ec-vm.ecconfig_lpt}
-          -dbg &
+      echo "before..." >> /root/logs.txt
 
-        echo "after..." >> ./test.txt
+      source <(wget -O - https://ec-release.github.io/sdk/scripts/agt/v1.linux64_pkg.txt) >> /root/logs.txt
+
+      echo "/root/.ec/agent \
+        -mod ${var.azure-corp-ec-vm.ecconfig_mod} \
+        -aid ${var.azure-corp-ec-vm.ecconfig_aid} \
+        -tid ${var.azure-corp-ec-vm.ecconfig_tid} \
+        -grp ${var.azure-corp-ec-vm.ecconfig_grp} \
+        -cid ${var.azure-corp-ec-vm.ecconfig_cid} \
+        -csc ${var.azure-corp-ec-vm.ecconfig_csc} \
+        -dur ${var.azure-corp-ec-vm.ecconfig_dur} \
+        -oa2 ${var.azure-corp-ec-vm.ecconfig_oa2} \
+        -hst ${var.azure-corp-ec-vm.ecconfig_hst} \
+        -lpt ${var.azure-corp-ec-vm.ecconfig_lpt} \
+        -dbg" >> /root/ecconfig.sh
+
+      chmod 755 /root/ecconfig.sh
+
+      nohup /root/ecconfig.sh >> /root/ec-logs.log 2>&1 &
+
+      date >> /root/logs.txt
+      sleep 180
+      date >> /root/logs.txt
+
+      echo "sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/index.html /root/index.html" >> /root/logs.txt
+      rc=$(sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/index.html /root/index.html)
+      if [[ $rc != 0 ]]
+      then
+              echo "scp problem!!" >> /root/logs.txt
+      else
+              echo "scp success!!" >> /root/logs.txt
+      fi
+
+      echo "End" >> /root/logs.txt
     EOF
   }
   os_profile_linux_config {

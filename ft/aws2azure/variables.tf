@@ -16,6 +16,8 @@ variable "aws-dc-sandbox-vpc-vm" {
     iam_instance_profile        = string
     associate_public_ip_address = bool
     scp_command                 = string
+    ec-sftp-user-name           = string
+    ec-sftp-user-secret         = string
     tags                        = map(string)
 
     gwserver_mod                = string
