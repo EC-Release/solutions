@@ -29,7 +29,8 @@ resource "aws_instance" "aws-dc-sandbox-vpc-vm1" {
 
             su - ec-sftp-user
             mkdir -p /home/ec-sftp-user/files
-            echo "<html><h1>test webpage</h1></html>" > /home/ec-sftp-user/files/index.html
+            fallocate -l 100M /home/ec-sftp-user/files/100M.img
+            fallocate -l 1G /home/ec-sftp-user/files/1G.img
 
             cat /home/ec-sftp-user/files/index.html >> /home/ec-sftp-user/ec-sftp-user-logs.txt
 
@@ -140,15 +141,21 @@ resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
       date >> /root/logs.txt
       sleep 180
       date >> /root/logs.txt
+      echo "End of waiting time" >> /root/logs.txt
 
-      echo "sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/index.html /root/index.html" >> /root/logs.txt
-      rc=$(sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/index.html /root/index.html)
-      if [[ $rc != 0 ]]
-      then
-              echo "scp problem!!" >> /root/logs.txt
-      else
-              echo "scp success!!" >> /root/logs.txt
-      fi
+      TMP=$(mktemp)
+      echo "Time taken to transfer 100MB file:" >>$TMP 2>&1
+      time (sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/100M.img /root/100M.img ) >>$TMP 2>&1
+      awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
+      cat $TMP >> /root/logs.txt
+      rm $TMP
+
+      TMP=$(mktemp)
+      cat "Time taken to transfer 1GB file:" >>$TMP 2>&1
+      time (sshpass -p ${var.aws-dc-sandbox-vpc-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/1G.img /root/1G.img ) >>$TMP 2>&1
+      awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
+      cat $TMP >> /root/logs.txt
+      rm $TMP
 
       echo "End" >> /root/logs.txt
     EOF
