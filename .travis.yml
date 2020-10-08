@@ -1,6 +1,9 @@
 dist: xenial
 language: bash
-if: head_branch =~ ^ft_automation$ OR branch = ft_automation
+
+branches:
+  only:
+    - ft-automation-update
 
 env:
   - tf_version=0.12.19 tf_init_cli_options="-input=false" tf_validation_cli_options="" tf_plan_cli_options="-lock=false -input=false" tf_apply_cli_options="-auto-approve -input=false"
