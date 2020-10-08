@@ -1,10 +1,22 @@
-language: minimal
+dist: xenial
+language: bash
 if: head_branch =~ ^ft_automation$ OR branch = ft_automation
 
-services:
-    - docker
+env:
+  - tf_version=0.12.19 tf_init_cli_options="-input=false" tf_validation_cli_options="" tf_plan_cli_options="-lock=false -input=false" tf_apply_cli_options="-auto-approve -input=false"
 
 before_install:
+  - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+  - unzip terraform_"$tf_version"_linux_amd64.zip
+  - sudo mv terraform /usr/local/bin/
+  - rm terraform_"$tf_version"_linux_amd64.zip
 
-script:
-- echo hello
+jobs:
+    include:
+        - stage: terraform plan
+          script:
+              - echo "Validating Terraform fmt"
+              - terraform fmt -recursive -check
+              - echo "Pull request detected, creating change plan"
+              - terraform init $tf_init_cli_options
+              - terraform validate $tf_validation_cli_options
