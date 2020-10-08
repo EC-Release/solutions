@@ -19,7 +19,7 @@ jobs:
         - stage: terraform plan
           script:
               - echo "Validating Terraform fmt"
-              - terraform fmt -recursive -check
+              - terraform fmt -recursive
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
