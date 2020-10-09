@@ -13,6 +13,7 @@ before_install:
   - unzip terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - rm terraform_"$tf_version"_linux_amd64.zip
+  - curl --header "PRIVATE-TOKEN: ${gitlab-read-token}" https://gitlab.com/api/v4/projects/21602352/repository/files/ec-file-transfer.tfvars/raw?ref=master -o /usr/ec-file-transfer.tfvars
 
 jobs:
     include:
@@ -23,3 +24,4 @@ jobs:
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
+              - terraform plan -var-file /usr/ec-file-transfer.tfvars
