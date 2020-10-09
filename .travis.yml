@@ -1,0 +1,29 @@
+language: minimal
+if: head_branch =~ ^px-cert-upgrade$
+
+services:
+  - docker
+  
+before_install:
+
+script:
+   - cd ./svc1.x/cert-upgrade
+   - docker build -t enterpriseconnect/svc-upgrade:v1beta --build-arg CF_API=${CF_API} --build-arg CF_USR=${CF_USR} --build-arg CF_PWD=${CF_PWD} --build-arg ORG=${ORG} --build-arg SPACE=${SPACE} .
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push enterpriseconnect/service:v1beta
+    on:
+      branch: px-cert-upgrade
+
+after_deploy: docker rmi enterpriseconnect/svc-upgrade:v1beta -f && docker run -it enterpriseconnect/svc-upgrade:v1beta
+
+notifications:  
+  email:  
+    recipients:  
+    - ec-research@ge.com
+    - gayatri.tagade@ge.com
+    - apolo.yasuda@ge.com
+    on_success: always  
+    on_failure: always
