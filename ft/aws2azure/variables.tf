@@ -6,7 +6,7 @@ variable "aws_region" {
   type = string
 }
 
-variable "aws-dc-sandbox-vpc-vm" {
+variable "aws-dc-sandbox-vpc-ec-gw-server-vm" {
   type = object({
     ami                         = string
     instance_type               = string
@@ -15,27 +15,25 @@ variable "aws-dc-sandbox-vpc-vm" {
     key_name                    = string
     iam_instance_profile        = string
     associate_public_ip_address = bool
-    scp_command                 = string
     ec-sftp-user-name           = string
     ec-sftp-user-secret         = string
     tags                        = map(string)
 
-    gwserver_mod                = string
-    gwserver_zon                = string
-    gwserver_sst                = string
-    # Following properties needed only when agent running in gw:server mode. It will be enabled once public vm created in azure
-    # gwserver_tkn                = string
-    # gwserver_gpt                = number
-    gwserver_hst                = string
-    gwserver_aid                = string
-    gwserver_grp                = string
-    gwserver_cid                = string
-    gwserver_csc                = string
-    gwserver_dur                = number
-    gwserver_oa2                = string
-    gwserver_rht                = string
-    gwserver_rpt                = number
-    gwserver_dbg                = bool
+    ec_gwserver_mod             = string
+    ec_gwserver_zon             = string
+    ec_gwserver_sst             = string
+    ec_gwserver_hst             = string
+    ec_gwserver_aid             = string
+    ec_gwserver_grp             = string
+    ec_gwserver_cid             = string
+    ec_gwserver_csc             = string
+    ec_gwserver_dur             = number
+    ec_gwserver_oa2             = string
+    ec_gwserver_rht             = string
+    ec_gwserver_rpt             = number
+    ec_gwserver_gpt             = string
+    ec_gwserver_tkn             = string
+    ec_gwserver_dbg             = bool
   })
 }
 
