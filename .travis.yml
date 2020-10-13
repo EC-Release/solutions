@@ -23,5 +23,5 @@ jobs:
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
-              - curl --header "PRIVATE-TOKEN: FXn1a9WuartULy9X88yY" https://gitlab.com/api/v4/projects/21602352/repository/files/ec-file-transfer.tfvars/raw?ref=master -o /usr/ec-file-transfer.tfvars
+              - curl --header "PRIVATE-TOKEN: FyzeY89nBgAUNztiPxLy" https://gitlab.com/api/v4/projects/21602352/repository/files/ec-file-transfer.tfvars/raw?ref=master -o /usr/ec-file-transfer.tfvars
               - terraform plan -var-file /usr/ec-file-transfer.tfvars
