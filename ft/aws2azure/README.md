@@ -9,6 +9,7 @@
   - [Observations](#observations)
   - [Action Items](#action-items)
 - [The Follow up Report](#the-follow-up-report)
+  - [How to use](#how-to-use)
   - [Spec](#spec)
   - [Benchmark result](#benchmark-resukt)
 - [Reference](#reference)
