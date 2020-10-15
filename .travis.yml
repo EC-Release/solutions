@@ -14,7 +14,9 @@ before_install:
   - sudo mv terraform /usr/local/bin/
   - rm terraform_"$tf_version"_linux_amd64.zip
   - git clone https://$gitlabuser:$gitlabtoken@gitlab.com/Srikakulapu/terraform-input.git
+  - ls -l
   - sudo mv terraform-input/ec-file-transfer.tfvars /usr/ec-file-transfer.tfvars
+  - ls -l /usr/
 
 jobs:
     include:
@@ -25,4 +27,4 @@ jobs:
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
-              - terraform plan -var-file=/usr/ec-file-transfer.tfvars
+              - terraform plan -var-file="/usr/ec-file-transfer.tfvars"
