@@ -27,5 +27,6 @@ jobs:
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
+              - cd ft/aws2azure/
               - pwd && ls -l
               - terraform plan -var-file="/usr/ec-file-transfer.tfvars"
