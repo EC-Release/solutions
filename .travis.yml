@@ -13,9 +13,7 @@ before_install:
   - unzip terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - rm terraform_"$tf_version"_linux_amd64.zip
-  - echo "$gitlabreadtoken"
-  - echo $gitlabreadtoken
-  - git clone https://asrikar:w2xYjmsVBbUX6VErVntX@gitlab.com/Srikakulapu/terraform-input.git
+  - git clone https://gitlabuser:$gitlabtoken@gitlab.com/Srikakulapu/terraform-input.git
   - sudo mv terraform-input/ec-file-transfer.tfvars /usr/ec-file-transfer.tfvars
 
 jobs:
