@@ -13,6 +13,8 @@ before_install:
   - unzip terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - rm terraform_"$tf_version"_linux_amd64.zip
+  - echo "$gitlabreadtoken"
+  - echo $gitlabreadtoken
   - git clone https://asrikar:w2xYjmsVBbUX6VErVntX@gitlab.com/Srikakulapu/terraform-input.git
   - sudo mv terraform-input/ec-file-transfer.tfvars /usr/ec-file-transfer.tfvars
 
@@ -25,4 +27,4 @@ jobs:
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
               - terraform validate $tf_validation_cli_options
-              - terraform plan -var-file /usr/ec-file-transfer.tfvars
+              - terraform plan -var-file=/usr/ec-file-transfer.tfvars
