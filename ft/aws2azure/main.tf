@@ -27,10 +27,10 @@ resource "aws_instance" "aws-dc-sandbox-vpc-ec-gw-server-vm" {
             mv -f temp.txt /etc/ssh/sshd_config
             sudo service sshd restart
 
-            su - ec-sftp-user
-            mkdir -p /home/ec-sftp-user/files
-            fallocate -l 100M /home/ec-sftp-user/files/100M.img
-            fallocate -l 1G /home/ec-sftp-user/files/1G.img
+            su - ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-name}
+            mkdir -p /home/${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-name}/files
+            fallocate -l 100M /home/${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-name}/files/100M.img
+            fallocate -l 1G /home/${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-name}/files/1G.img
 
             curl http://169.254.169.254/latest/meta-data/public-ipv4 > /tmp/test
             public_ip=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
@@ -50,7 +50,7 @@ resource "aws_instance" "aws-dc-sandbox-vpc-ec-gw-server-vm" {
               -rht ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec_gwserver_rht} \
               -gpt ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec_gwserver_gpt} \
               -tkn ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec_gwserver_tkn} \
-              -dbg &
+              -dbg >> /home/${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-name}/ec-logs.log 2>&1 &
 
    EOF
 
@@ -147,14 +147,28 @@ resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
       echo "End of waiting time" >> /root/logs.txt
 
       TMP=$(mktemp)
-      echo "Time taken to transfer 100MB file:" >>$TMP 2>&1
+      echo "Time taken to transfer 100MB file - 1:" >>$TMP 2>&1
       time (sshpass -p ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/100M.img /root/100M.img ) >>$TMP 2>&1
       awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
       cat $TMP >> /root/logs.txt
       rm $TMP
 
       TMP=$(mktemp)
-      echo "Time taken to transfer 1GB file:" >>$TMP 2>&1
+      echo "Time taken to transfer 100MB file: - 2" >>$TMP 2>&1
+      time (sshpass -p ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/100M.img /root/100M.img ) >>$TMP 2>&1
+      awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
+      cat $TMP >> /root/logs.txt
+      rm $TMP
+
+      TMP=$(mktemp)
+      echo "Time taken to transfer 1GB file: - 1" >>$TMP 2>&1
+      time (sshpass -p ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/1G.img /root/1G.img ) >>$TMP 2>&1
+      awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
+      cat $TMP >> /root/logs.txt
+      rm $TMP
+
+      TMP=$(mktemp)
+      echo "Time taken to transfer 1GB file: - 2" >>$TMP 2>&1
       time (sshpass -p ${var.aws-dc-sandbox-vpc-ec-gw-server-vm.ec-sftp-user-secret} scp -P 7979 -o StrictHostKeyChecking=no ec-sftp-user@localhost:/home/ec-sftp-user/files/1G.img /root/1G.img ) >>$TMP 2>&1
       awk -F'[ ms]+' '/^real/ {print "copy time: "1000*$2"ms"}' $TMP
       cat $TMP >> /root/logs.txt
