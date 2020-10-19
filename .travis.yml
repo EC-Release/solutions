@@ -20,6 +20,7 @@ before_install:
   - export AWS_ACCESS_KEY_ID=$AWSACCESKEYID
   - export AWS_SECRET_ACCESS_KEY=$AWSSECRETKEYID
   - export AWS_DEFAULT_REGION=$AWSREGION
+  - az login --service-principal -u $AZUSER -p $AZPWD --tenant $AZTENANTID
 
 jobs:
     include:
