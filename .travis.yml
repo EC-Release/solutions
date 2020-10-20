@@ -38,5 +38,4 @@ jobs:
               - terraform validate $tf_validation_cli_options
               - pwd && ls -l
               - terraform plan -var-file="/usr/ec-file-transfer.tfvars"
-              - terraform destroy -var-file="/usr/ec-file-transfer.tfvars" -auto-approve
               - terraform apply -var-file="/usr/ec-file-transfer.tfvars" -auto-approve
