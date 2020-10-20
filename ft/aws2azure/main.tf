@@ -73,7 +73,7 @@ resource "azurerm_virtual_machine" "azure-corp-ec-vm" {
         -csc ${var.azure-corp-ec-vm.ecconfig_csc} \
         -dur ${var.azure-corp-ec-vm.ecconfig_dur} \
         -oa2 ${var.azure-corp-ec-vm.ecconfig_oa2} \
-        -hst "ws://${aws_instance.aws-dc-sandbox-vpc-ec-gw-server-vm.public_ip}/agent" \
+        -hst "ws://localhost/agent" \
         -lpt ${var.azure-corp-ec-vm.ecconfig_lpt} \
         -dbg" >> /root/ecconfig.sh
 
