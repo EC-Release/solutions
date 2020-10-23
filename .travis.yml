@@ -1,18 +1,19 @@
 dist: xenial
 language: bash
-
-branches:
-  only:
-    - ft-automation-update
+if: head_branch =~ ^ft-automation-update$ OR branch = ft-automation
 
 env:
-  - tf_version=0.12.19 tf_init_cli_options="-input=false" tf_validation_cli_options="" tf_plan_cli_options="-lock=false -input=false" tf_apply_cli_options="-auto-approve -input=false"
+  - tf_version=0.12.19
+  - tf_init_cli_options="-input=false"
 
 before_install:
   - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
   - unzip terraform_"$tf_version"_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - rm terraform_"$tf_version"_linux_amd64.zip
+  - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+before_script:
   - git clone https://$gitlabuser:$gitlabtoken@gitlab.com/Srikakulapu/terraform-input.git
   - pwd && ls -l
   - sudo mv terraform-input/ec-file-transfer.tfvars /usr/ec-file-transfer.tfvars
@@ -24,7 +25,6 @@ before_install:
   - export ARM_CLIENT_SECRET=$AZPWD
   - export ARM_SUBSCRIPTION_ID=$AZSUBSCRIPTIONID
   - export ARM_TENANT_ID=$AZTENANTID
-  - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 jobs:
     include:
@@ -35,7 +35,14 @@ jobs:
               - terraform fmt -recursive
               - echo "Pull request detected, creating change plan"
               - terraform init $tf_init_cli_options
-              - terraform validate $tf_validation_cli_options
+              - terraform validate
               - pwd && ls -l
               - terraform plan -var-file="/usr/ec-file-transfer.tfvars"
               - terraform apply -var-file="/usr/ec-file-transfer.tfvars" -auto-approve
+
+notifications:
+  email:
+    recipients:
+    - ec-research@ge.com
+    on_success: always
+    on_failure: always
