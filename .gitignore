@@ -1,0 +1,7 @@
+*.tfstate
+*.backup
+*.tfvars
+ft/aws2azure/.terraform/
+ft/aws2azure/.idea/
+ipubip
+ft/aws2azure/pubip

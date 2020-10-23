@@ -9,8 +9,8 @@
   - [Observations](#observations)
   - [Action Items](#action-items)
 - [The Follow up Report](#the-follow-up-report)
+  - [How to use](#how-to-use)
   - [Spec](#spec)
-  - [Test script](#test-script)
   - [Benchmark result](#benchmark-resukt)
 - [Reference](#reference)
 
@@ -67,19 +67,63 @@ time scp -P 6192 -i ~/.ssh/id_rsa /root/1024MB.img zameer@localhost:/tmp
 ### The Follow up Report
 The EC official benchmark test for File Transfer use cases.
 
+#### How to use
+
+- Install the prerequisites
+
+    - [Terraform v0.12.24](https://www.terraform.io/downloads.html)
+    - [AWS CLI 2.0.7](https://aws.amazon.com/cli/)
+    - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+- Create the ```terraform.tfvars``` with corresponding configuration details
+
+- Connect to AWS environment
+
+  - [Cago](https://devcloud.swcoe.ge.com/devspace/display/SBSF/Cagophilist+%28Cago%29+Quickstart) tool for connecting to Corp Sandbox VPC, refresh the profiles 
+    ```hcl-terraform
+    cago refresh-profiles
+    ```
+    It will generate a token and will be used for connecting to target cloud environment.
+  - For aws cli, configure the environment by running the command
+    ```hcl-terraform
+    aws configure
+    ```
+- Connect to Azure environment
+
+    Run the below command and follow the steps to login
+    ```hcl
+    az login
+    ```
+- Initialize the terraform
+  ```hcl-terraform
+  terraform init
+  ```
+
+- Review the resource plan
+  ```hcl-terraform
+  terraform plan
+  ```
+
+- Apply to implement the plan
+  ```hcl-terraform
+  terraform apply -var-file="terraform.tfvars"
+  ```
+  
 #### Spec
-AWS: t2.large
+AWS: t2.micro
 
 Azure: Standard D2s v3 (2 vcpus, 8 GiB memory)
 
-EC Agent: v1.1beta.fukuoka.2730
+EC Agent: v1.hokkaido.212
 
 EC Connection Type: Fuse mode (gw:server in AWS and client in Azure)
 
-
-#### Test script
-
 #### Benchmark result
+
+| File Size | Average Time (sec) |
+| --------- | ------------------ |
+| 100 MB | 6.16 |
+| 1024 MB | 59.12 |
 
 ## Reference
 <sup>[1][AWS to Azure - File Transfer using EC (Internal)](https://github.build.ge.com/200020008/digitalconnect-Cloud-Automation/blob/master/cloud-ge-latency/GE%20Cloud%20Consolidated%20Latency%20Report.md) Originated by Zameer Ahmed</sup>
