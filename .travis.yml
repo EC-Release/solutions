@@ -44,6 +44,6 @@ jobs:
 notifications:
   email:
     recipients:
-    - RamaRao.Srikakulapu@ge.com
+    - ec-research@ge.com
     on_success: always
     on_failure: always
