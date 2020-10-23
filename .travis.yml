@@ -3,8 +3,7 @@ language: bash
 if: head_branch =~ ^ft-automation-update$ OR branch = ft-automation
 
 env:
-  - tf_version=0.12.19
-  - tf_init_cli_options="-input=false"
+  - tf_version=0.12.19 tf_init_cli_options="-input=false"
 
 before_install:
   - wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
