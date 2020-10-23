@@ -38,6 +38,8 @@ jobs:
               - pwd && ls -l
               - terraform plan -var-file="/usr/ec-file-transfer.tfvars"
               - terraform apply -var-file="/usr/ec-file-transfer.tfvars" -auto-approve
+              - sleep 900
+              - terraform destroy -var-file="/usr/ec-file-transfer.tfvars" -auto-approve
 
 notifications:
   email:
